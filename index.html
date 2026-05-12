@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Invasão dos NPCs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="fundo-canvas"></canvas>
+
+    <main class="menu-container" id="menu-principal">
+        <h1 class="titulo-jogo">A INVASÃO DOS <span class="destaque">NPCs</span></h1>
+        <nav class="opcoes-menu">
+            <button class="btn-menu" onclick="iniciarJogo()">INICIAR</button>
+        </nav>
+    </main>
+
+    <div id="tela-historia" class="historia-container" style="display: none;">
+        <div class="caixa-historia">
+            <p id="texto-narracao"></p>
+            
+            <div id="container-nome" style="display: none; margin-top: 20px;">
+                <input type="text" id="nome-jogador" placeholder="Seu nome..." maxlength="15">
+            </div>
+
+            <button class="btn-menu" id="btn-historia" onclick="proximaFrase()">CONTINUAR</button>
+        </div>
+    </div>
+
+    <script src="menu.js"></script>
+    <script src="historia.js"></script>
+</body>
+</html>
