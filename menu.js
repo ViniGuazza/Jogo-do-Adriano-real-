@@ -1,49 +1,78 @@
-const canvas = document.getElementById('fundo-canvas');
-const ctx = canvas.getContext('2d');
+// menu.js
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-let particulas = [];
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-function ajustarTela() {
+window.faseAtual = "menu";
+
+/* =========================
+   PARTÍCULAS DO MENU
+========================= */
+const menuParticles = [];
+
+function initMenuParticles() {
+    menuParticles.length = 0;
+    for (let i = 0; i < 60; i++) {
+        menuParticles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 3 + 1,
+            speed: Math.random() * 0.5 + 0.2
+        });
+    }
+}
+
+initMenuParticles();
+
+/* =========================
+   RENDER MENU
+========================= */
+function renderMenu() {
+    // Céu escuro
+    ctx.fillStyle = "#101820";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Névoa
+    let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "rgba(0,0,0,0.1)");
+    gradient.addColorStop(1, "rgba(0,0,0,0.7)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Lua
+    ctx.beginPath();
+    ctx.arc(180, 140, 55, 0, Math.PI * 2);
+    ctx.fillStyle = "#dfe6e9";
+    ctx.fill();
+
+    // Chão
+    ctx.fillStyle = "#1e5631";
+    ctx.fillRect(0, canvas.height - 180, canvas.width, 180);
+
+    // Partículas
+    menuParticles.forEach(p => {
+        p.y -= p.speed;
+        if (p.y < -10) {
+            p.y = canvas.height + 10;
+            p.x = Math.random() * canvas.width;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.fill();
+    });
+}
+
+/* =========================
+   RESIZE
+========================= */
+window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-}
-
-class FogParticula {
-    constructor() { this.reset(); }
-    reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.tamanho = Math.random() * 200 + 100;
-        this.velX = Math.random() * 0.5 - 0.25;
-        this.opacidade = Math.random() * 0.15;
+    initMenuParticles();
+    if (window.faseAtual === "jogo" && typeof window.createGrass === "function") {
+        window.createGrass();
     }
-    atualizar() {
-        this.x += this.velX;
-        if (this.x > canvas.width + 100) this.x = -100;
-    }
-    desenhar() {
-        ctx.beginPath();
-        let g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.tamanho);
-        g.addColorStop(0, `rgba(20, 60, 20, ${this.opacidade})`);
-        g.addColorStop(1, 'transparent');
-        ctx.fillStyle = g;
-        ctx.arc(this.x, this.y, this.tamanho, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
-
-function initFundo() {
-    ajustarTela();
-    particulas = Array.from({length: 45}, () => new FogParticula());
-}
-
-function animar() {
-    ctx.fillStyle = '#050505';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    particulas.forEach(p => { p.atualizar(); p.desenhar(); });
-    requestAnimationFrame(animar);
-}
-
-window.addEventListener('resize', initFundo);
-initFundo();
-animar();
+});

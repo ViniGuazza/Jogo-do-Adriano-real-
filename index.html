@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="fundo-canvas"></canvas>
+    <canvas id="gameCanvas"></canvas>
 
     <main class="menu-container" id="menu-principal">
         <h1 class="titulo-jogo">A INVASÃO DOS <span class="destaque">NPCs</span></h1>
@@ -19,16 +19,20 @@
     <div id="tela-historia" class="historia-container" style="display: none;">
         <div class="caixa-historia">
             <p id="texto-narracao"></p>
-            
             <div id="container-nome" style="display: none; margin-top: 20px;">
                 <input type="text" id="nome-jogador" placeholder="Seu nome..." maxlength="15">
             </div>
-
             <button class="btn-menu" id="btn-historia" onclick="proximaFrase()">CONTINUAR</button>
         </div>
     </div>
 
-    <script src="menu.js"></script>
-    <script src="historia.js"></script>
+<script src="input.js"></script>
+<script src="player.js"></script>
+<script src="enemy.js"></script>
+<script src="collision.js"></script>
+<script src="menu.js"></script>
+<script src="historia.js"></script>
+<script src="gameover.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
