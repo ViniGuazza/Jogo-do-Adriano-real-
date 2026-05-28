@@ -1,4 +1,4 @@
-// enemy.js - Versão "PHYSICAL BATS"
+// enemy.js - Versão "PHYSICAL BATS PRO"
 window.enemies = [];
 
 function spawnBat() {
@@ -20,10 +20,8 @@ function spawnBat() {
 
 window.initEnemies = function(q) { window.enemies = []; for (let i=0; i<q; i++) spawnBat(); };
 
-// FUNÇÃO DE COLISÃO PARA INIMIGOS
 function checkEnemyObstacles(en) {
     if (typeof OBSTACULOS === "undefined") return;
-    // Caixa de colisão baseada na sombra/corpo central
     const eBox = { x: en.x + 10, y: en.y + 10, w: 20, h: 20 };
     OBSTACULOS.forEach(obs => {
         if (eBox.x < obs.x + obs.w && eBox.x + eBox.w > obs.x && eBox.y < obs.y + obs.h && eBox.y + eBox.h > obs.y) {
@@ -53,10 +51,7 @@ window.updateEnemies = function() {
             en.x += (dx/dist) * en.speed + Math.cos(en.phase)*0.5;
             en.y += (dy/dist) * en.speed + Math.sin(en.phase)*0.5;
         }
-        
-        // APLICAR COLISÃO COM OBSTÁCULOS
         checkEnemyObstacles(en);
-        
         if (en.hp <= 0) { window.enemies.splice(i, 1); }
     }
 };
@@ -78,4 +73,31 @@ window.drawEnemy = function(ctx, en) {
         ctx.fillStyle = "#ff4757"; ctx.fillRect(-15, -25, (en.hp/en.maxHp)*30, 4);
     }
     ctx.restore();
+};
+
+window.handleCombat = function() {
+    if (!window.player || window.faseAtual !== "jogo") return;
+    const p = window.player;
+    window.enemies.forEach(en => {
+        let dx = (en.x + 20) - (p.x + 32);
+        let dy = (en.y + 20) - (p.y + 32);
+        let dist = Math.sqrt(dx*dx + dy*dy);
+
+        // Inimigo batendo no Player
+        if (dist < 35 && p.invulTimer === 0) {
+            p.hp -= 10; p.invulTimer = 60;
+            p.vx = (dx/dist) * -8; p.vy = (dy/dist) * -8;
+            p.screenshake = 5; // Tremor ao levar dano
+        }
+
+        // Player batendo no Inimigo
+        if (p.hitbox && en.invulFrame === 0) {
+            let reach = p.facing === 1 ? (dx > 0 && dx < 65) : (dx < 0 && dx > -65);
+            if (reach && Math.abs(dy) < 40) {
+                en.hp -= 1; en.invulFrame = 15;
+                en.kx = p.facing * 12;
+                p.screenshake = 3; // Tremor ao acertar
+            }
+        }
+    });
 };
