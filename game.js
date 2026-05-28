@@ -252,7 +252,7 @@ function draw() {
             else if (obj.type === "player") { if (typeof drawPlayer === "function") drawPlayer(ctx); }
             else { if (typeof drawEnemy === "function") drawEnemy(ctx, obj); }
         });
-        ctx.fillStyle = "rgba(2, 5, 15, 0.75)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(2, 5, 15, 0.45)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
     } else if (window.faseAtual === "menu") {
         if (typeof renderMenu === "function") renderMenu();
     } else if (window.faseAtual === "gameover") {
